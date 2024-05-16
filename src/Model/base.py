@@ -15,6 +15,6 @@ class Base:
         raise NotImplementedError("Define abstractmethod 'update_data'")
 
     @abstractmethod
-    def search_data(self):
+    def search_data(self, search_id):
         raise NotImplementedError("Define abstractmethod 'search_info'")
 

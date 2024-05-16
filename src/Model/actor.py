@@ -1,4 +1,4 @@
-from src.Model.Base import Base
+from src.Model.base import Base
 
 
 class Actor(Base):
