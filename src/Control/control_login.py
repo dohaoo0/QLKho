@@ -1,11 +1,9 @@
-import PyQt6
 import sys
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtWidgets import QMessageBox
 
-from src.Model.ConnectDb import ConnectDB
-from src.Model.User import User
-from src.Control.control_main import MainUi
+from src.Model.login import Login
+from src.Control.control_main import Main
 
 
 class LoginUi(QtWidgets.QMainWindow):
@@ -16,26 +14,33 @@ class LoginUi(QtWidgets.QMainWindow):
         self.login_button.clicked.connect(lambda: self.on_login_button_clicked)
         self.login_input_id = self.findChild(QtWidgets.QLineEdit, 'login_input_id')
         self.login_input_password = self.findChild(QtWidgets.QPushButton, 'login_input_password')
+        self.tab_user = self.findChild(QtWidgets.QTabWidget, "tab_user")
 
     def on_login_button_clicked(self):
         login_input_id = self.login_input_id.text().strip()
         login_input_password = self.login_input_password.text().strip()
 
-        user = User(login_input_id, login_input_password)
-        result= user.check_login()
-        if not result:
+        user = Login(login_input_id, login_input_password)
+        result = user.check_login()
+        if result is False:
             title = "Đăng nhập không thành công"
             log = "Vui lòng kiểm tra lại thông tin"
             self.show_log(title, log)
+        elif result is True:
+            self.hide()
+            window_main = Main()
+            window_main.show()
+            self.tab_user.hide()
         else:
             self.hide()
-            window_main = MainUi()
+            window_main = Main()
             window_main.show()
+            self.tab_user.show()
 
+    @staticmethod
     def show_log(title, log):
         msg = QMessageBox()
         msg.setWindowTitle(title)
-        msg.setText(log)
         msg.setText(log)
         msg.setIcon(QMessageBox.Icon.Question)
         msg.exec()

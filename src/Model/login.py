@@ -1,7 +1,7 @@
-from src.Model.ConnectDb import ConnectDB
+from src.Model.connectDb import ConnectDB
 
 
-class User:
+class Login:
     def __int__(self, input_id, input_password):
         self.input_id = input_id
         self.input_password = input_password
@@ -14,7 +14,7 @@ class User:
 
         for data in data_user:
             if self.input_id == data[0] and self.input_password == data[1]:
+                if data[3] == "Quản lý":
+                    return "Quản lý"
                 return True
         return False
-
-    
