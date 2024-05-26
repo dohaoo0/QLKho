@@ -1,19 +1,20 @@
-from src.Model.connectDb import ConnectDB
+from src.Model.connect_db import ConnectDB
 
 
 class Login:
-    def __int__(self, input_id, input_password):
+    def __int__(self, input_id=None, input_password=None):
         self.input_id = input_id
         self.input_password = input_password
 
-    def check_login(self):
+    @staticmethod
+    def check_login(input_id=None, input_password=None):
         con = ConnectDB()
         con.connect()
 
         data_user = con.execute_query("""SELECT * FROM User;""")
 
         for data in data_user:
-            if self.input_id == data[0] and self.input_password == data[1]:
+            if int(input_id) == data[0] and input_password == data[2]:
                 if data[3] == "Quản lý":
                     return "Quản lý"
                 return True

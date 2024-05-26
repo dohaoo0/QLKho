@@ -12,13 +12,21 @@ class TableModel(QtCore.QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             return self._data[index.row()][index.column()]
 
-    def rowCount(self, index):
+    def rowCount(self, index=None):
         return len(self._data)
 
-    def columnCount(self, index):
+    def columnCount(self, index=None):
         return len(self._data[0])
 
-    def headerData(self, col, orientation, role):
+    def headerData(self, col=None, orientation=QtCore.Qt.Orientation.Horizontal, role=Qt.ItemDataRole.DisplayRole):
         if orientation == QtCore.Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
             return self.header[col]
         return None
+
+    def flags(self, index):
+        return super().flags(index) | Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsEnabled
+
+    def insertRow(self, row, parent=None):
+        self.beginInsertRows(parent, row, row)
+        self._data.insert(row, [None] * self.columnCount())
+        self.endInsertRows()

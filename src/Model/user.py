@@ -2,7 +2,7 @@ from src.Model.base import Base
 
 
 class User(Base):
-    def __init__(self, id, name, password, role):
+    def __init__(self, id=None, name=None, password=None, role=None):
         self.id = id
         self.name = name
         self.password = password
@@ -10,7 +10,7 @@ class User(Base):
 
     def insert_data(self):
         insert_query = f"INSERT INTO User (IdUser, NameUser, Password, Role) VALUES \
-                       '{self.id}', '{self.name}', '{self.password}', '{self.role}'"
+                       ('{self.id}', '{self.name}', '{self.password}', '{self.role}');"
         return insert_query
 
     def delete_data(self, id_delete):
@@ -26,5 +26,5 @@ class User(Base):
         where = ';'
         if search_id != '':
             where = f"WHERE IdUser = '{search_id}';"
-        search_query = f"SELECT * FROM User" + where
+        search_query = f"SELECT * FROM User " + where
         return search_query
