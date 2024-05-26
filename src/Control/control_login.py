@@ -1,6 +1,7 @@
 import sys
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtWidgets import QMessageBox
+import multiprocessing
 
 from src.Model.login import Login
 from src.Control.control_main import Main
@@ -9,33 +10,28 @@ from src.Control.control_main import Main
 class LoginUi(QtWidgets.QMainWindow):
     def __init__(self):
         super(LoginUi, self).__init__()
-        self.ui = uic.loadUi(r"..\View\login.ui", self)
+        self.ui = uic.loadUi(r"View\login.ui", self)
+        self.login_input_id = self.findChild(QtWidgets.QLineEdit, 'login_input_id')
+        self.login_input_password = self.findChild(QtWidgets.QLineEdit, 'login_input_password')
         self.login_button = self.findChild(QtWidgets.QPushButton, 'login_button')
         self.login_button.clicked.connect(lambda: self.on_login_button_clicked)
-        self.login_input_id = self.findChild(QtWidgets.QLineEdit, 'login_input_id')
-        self.login_input_password = self.findChild(QtWidgets.QPushButton, 'login_input_password')
-        self.tab_user = self.findChild(QtWidgets.QTabWidget, "tab_user")
 
     def on_login_button_clicked(self):
         login_input_id = self.login_input_id.text().strip()
         login_input_password = self.login_input_password.text().strip()
 
-        user = Login(login_input_id, login_input_password)
-        result = user.check_login()
+        user = Login()
+        result = user.check_login(login_input_id, login_input_password)
         if result is False:
             title = "Đăng nhập không thành công"
             log = "Vui lòng kiểm tra lại thông tin"
             self.show_log(title, log)
-        elif result is True:
-            self.hide()
-            window_main = Main()
-            window_main.show()
-            self.tab_user.hide()
         else:
             self.hide()
             window_main = Main()
             window_main.show()
-            self.tab_user.show()
+            if result is True:
+                window_main.tab.removeTab(5)
 
     @staticmethod
     def show_log(title, log):
@@ -59,7 +55,8 @@ class LoginUi(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     app = QtWidgets.QApplication(sys.argv)
     window = LoginUi()
     window.show()
-    app.exec()
+    sys.exit(app.exec())
